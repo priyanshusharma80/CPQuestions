@@ -1,55 +1,38 @@
 #include <bits/stdc++.h>
-// #include <ext/pb_ds/assoc_container.hpp> 
 using namespace std;
 
 void solve(){
     int n;
     cin>>n;
+    
+    vector<int> a(n),b(n);
+    for(int i=0;i<n;i++) cin>>a[i];
+    for(int j=0;j<n;j++) cin>>b[j];
 
-    string a,b;
-    for(int i=0;i<n;i++){
-        char c;
-        cin>>c;
-        a+=c;
+    long long ans = 0;
+    vector<long long> cnt1(2*n+1,0),cnt2(2*n+1,0);
+
+    for(long long i=0;i<n;i++){
+        long long j = i;
+        while(j<n and a[j]==a[i]) j++;
+        cnt1[a[i]] = max(cnt1[a[i]],j-i);
+        i=j-1;
     }
 
-    for(int i=0;i<n;i++){
-        char c;
-        cin>>c;
-        b+=c;
+    for(long long i=0;i<n;i++){
+        long long j =i;
+        while(j<n and b[j]==b[i]) j++;
+        cnt2[b[i]]=max(cnt2[b[i]],j-i);
+        i=j-1;
     }
 
-    // possible combinations 
-    string p1 = a+b;
-    string p2 = b+a;
-    string temp = b;
-    string p3 = a+string(temp.rbegin(),temp.rend());
-    string p4 = string(a.rbegin(),a.rend())+b;
-
-    vector<string> v = {p1,p2,p3,p4};
-
-    // cout<<p1<<" "<<p2<<" "<<p3<<" "<<p4<<endl;
-    int ans = 1;
-    for(int i=0;i<4;i++){
-        int maxlen = 1;
-        int cnt = 1;
-        string s = v[i];
-        for(int j=0;j<2*n;j++){
-            if(s[j]==s[j+1]) cnt++;
-            else cnt=1;
-            maxlen = max(maxlen,cnt);
-        }
-        ans = max(ans,maxlen);
-    }
-
+    for(long long i=1;i<=2*n;i++) ans = max(ans,cnt1[i]+cnt2[i]);
     cout<<ans<<endl;
-    
 }
-int main()
-{
-    
+
+int main() {
     int t;
     cin>>t;
-    while(t--)
-    solve();
+    while(t--) solve();
+    return 0;
 }
